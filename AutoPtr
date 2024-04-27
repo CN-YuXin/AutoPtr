@@ -22,7 +22,11 @@ struct Delete<U[S]> {
 		delete [] d;
 	}
 };
+#if _CPP_VERSION_ >= 17
 template <typename T, template <typename> typename D = Delete>
+#else
+template <typename T, typename D = Delete<T>>
+#endif
 class AutoPtr {
 	static inline void addCount(AutoPtr& r) noexcept {
 		for (AutoPtr* i = &r;i != nullptr;i = i->_idata->from) {
@@ -36,7 +40,7 @@ class AutoPtr {
 	}
 	struct Data {
 		#if _CPP_VERSION_ >= 14
-			constexpr
+		constexpr
 		#endif
 		Data() noexcept:
 			from(nullptr),
@@ -51,30 +55,34 @@ class AutoPtr {
 	}*_idata;
 	T* _data;
   public:
+	#if _CPP_VERSION_ >= 17
 	using deleteClass = D<T>;
+	#else
+	using deleteClass = D;
+	#endif
 	#if _CPP_VERSION_ >= 14
-		constexpr
+	constexpr
 	#endif
 	AutoPtr() noexcept:
 		_idata(new Data),
 		_data(nullptr) {
 	}
 	#if _CPP_VERSION_ >= 14
-		constexpr
+	constexpr
 	#endif
 	AutoPtr(T *d) noexcept:
 		_idata(new Data),
 		_data(d) {
 	}
 	#if _CPP_VERSION_ >= 14
-		constexpr
+	constexpr
 	#endif
 	AutoPtr(AutoPtr& r) noexcept:
 		_idata(new Data(r)),
 		_data(r._data) {
 	}
 	#if _CPP_VERSION_ >= 14
-		constexpr
+	constexpr
 	#endif
 	AutoPtr(AutoPtr&& r) noexcept:
 		_idata(new Data(r)),
@@ -126,12 +134,21 @@ class AutoPtr {
 	}
 };
 
+#if _CPP_VERSION_ >= 17
 template <template <typename> typename T>
 class AutoPtr<void,T> {
 };
 template <typename T, template <typename> typename U>
 class AutoPtr<T[],U> {
 };
+#else
+template <typename T>
+class AutoPtr<void,T> {
+};
+template <typename T, typename U>
+class AutoPtr<T[],U> {
+};
+#endif
 
 #if _CPP_VERSION_ >= 17
 

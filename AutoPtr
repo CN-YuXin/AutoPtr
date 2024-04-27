@@ -46,7 +46,8 @@ class AutoPtr {
 	#else
 	using deleteClass = D;
 	#endif
-	using PointToType = T;
+	using pointToType = T;
+	using elementType = typename std::remove_extent<T>::type;
 	#if _CPP_VERSION_ >= 14
 	constexpr
 	#endif
@@ -94,8 +95,11 @@ class AutoPtr {
 	constexpr bool operator==(void* e) const noexcept {
 		return (void*)_data == e;
 	}
-	constexpr typename std::remove_extent<T>::type& operator[](size_t in) const noexcept {
+	constexpr elementType& operator[](size_t in) const noexcept {
 		return _data[in];
+	}
+	constexpr elementType& operator*() const noexcept {
+		return *_data;
 	}
 	AutoPtr& operator=(T* d) noexcept {
 		if (d != _data) {

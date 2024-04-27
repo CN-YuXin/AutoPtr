@@ -65,15 +65,19 @@ class AutoPtr {
 	constexpr
 	#endif
 	AutoPtr(AutoPtr& r) noexcept:
-		_count((++*r._count,r._count)),
+		_count(r._count),
 		_data(r._data) {
+		if (r._count != nullptr)
+			++*r._count;
 	}
 	#if _CPP_VERSION_ >= 14
 	constexpr
 	#endif
 	AutoPtr(AutoPtr&& r) noexcept:
-		_count((++*r._count,r._count)),
+		_count(r._count),
 		_data(r._data) {
+		if (r._count != nullptr)
+			++*r._count;
 		r._data  = nullptr;
 		r._count = nullptr;
 	}

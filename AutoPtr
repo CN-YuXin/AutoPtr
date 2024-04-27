@@ -60,6 +60,7 @@ class AutoPtr {
 	#else
 	using deleteClass = D;
 	#endif
+	using PointToType = T;
 	#if _CPP_VERSION_ >= 14
 	constexpr
 	#endif

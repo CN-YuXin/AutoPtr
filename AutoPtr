@@ -10,7 +10,19 @@ namespace STD_NAMESPACE {
 #endif
 
 #include <stddef.h>
-template <typename T>
+template <typename U>
+struct Delete {
+	void operator()(U* d) {
+		delete d;
+	}
+};
+template <typename U, size_t S>
+struct Delete<U[S]> {
+	void operator()(U(*d)[S]) {
+		delete [] d;
+	}
+};
+template <typename T, template <typename> typename D = Delete>
 class AutoPtr {
 	static inline void addCount(AutoPtr& r) noexcept {
 		for (AutoPtr* i = &r;i != nullptr;i = i->_idata->from) {
@@ -22,18 +34,6 @@ class AutoPtr {
 			--i->_idata->count;
 		}
 	}
-	template <typename U = T>
-	struct Delete {
-		void operator()(U* d) {
-			delete d;
-		}
-	};
-	template <typename U, size_t S>
-	struct Delete<U[S]> {
-		void operator()(U(*d)[S]) {
-			delete [] d;
-		}
-	};
 	struct Data {
 		#if _CPP_VERSION_ >= 14
 			constexpr
@@ -51,6 +51,7 @@ class AutoPtr {
 	}*_idata;
 	T* _data;
   public:
+	using deleteClass = D<T>;
 	#if _CPP_VERSION_ >= 14
 		constexpr
 	#endif
@@ -101,7 +102,7 @@ class AutoPtr {
 		if (d != _data and _idata->count != 0) {
 			remCount(*this);
 			if (_idata->count == 1)
-				Delete<>()(_data);
+				deleteClass()(_data);
 			_data = d;
 		}
 		return *this;
@@ -118,18 +119,18 @@ class AutoPtr {
 	}
 	~AutoPtr() {
 		if (_idata->count == 1) {
-			Delete<>()(_data);
+			deleteClass()(_data);
 		} else if (_idata->count != 0) {
 			remCount(*this);
 		}
 	}
 };
 
-template <>
-class AutoPtr<void> {
+template <template <typename> typename T>
+class AutoPtr<void,T> {
 };
-template <typename T>
-class AutoPtr<T[]> {
+template <typename T, template <typename> typename U>
+class AutoPtr<T[],U> {
 };
 
 #if _CPP_VERSION_ >= 17

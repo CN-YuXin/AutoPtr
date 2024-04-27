@@ -4,12 +4,11 @@
 #define _AUTO_PTR_OF_YX_
 
 #include <type_traits>
+#include <stddef.h>
 
 #ifdef STD_NAMESPACE
 namespace STD_NAMESPACE {
 #endif
-
-#include <stddef.h>
 template <typename U>
 struct Delete {
 	void operator()(U* d) {
@@ -208,8 +207,8 @@ class AutoPtr<T[],U> {
 template <typename T>
 AutoPtr(T*) -> AutoPtr<T>;
 
-template <typename T>
-AutoPtr(AutoPtr<T>) -> AutoPtr<T>;
+template <typename T, template <typename> typename U>
+AutoPtr(AutoPtr<T,U>) -> AutoPtr<T,U>;
 
 #endif
 

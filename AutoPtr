@@ -1,0 +1,149 @@
+#include <_TestVersion>
+
+#if !defined(_AUTO_PTR_OF_YX_) && _CPP_VERSION_ != 98
+#define _AUTO_PTR_OF_YX_
+
+#include <type_traits>
+
+#ifdef STD_NAMESPACE
+namespace STD_NAMESPACE {
+#endif
+
+#include <stddef.h>
+template <typename T>
+class AutoPtr {
+	static inline void addCount(AutoPtr& r) noexcept {
+		for (AutoPtr* i = &r;i != nullptr;i = i->_idata->from) {
+			++i->_idata->count;
+		}
+	}
+	static inline void remCount(AutoPtr& r) noexcept {
+		for (AutoPtr* i = &r;i != nullptr;i = i->_idata->from) {
+			--i->_idata->count;
+		}
+	}
+	template <typename U = T>
+	struct Delete {
+		void operator()(U* d) {
+			delete d;
+		}
+	};
+	template <typename U, size_t S>
+	struct Delete<U[S]> {
+		void operator()(U(*d)[S]) {
+			delete [] d;
+		}
+	};
+	struct Data {
+		#if _CPP_VERSION_ >= 14
+			constexpr
+		#endif
+		Data() noexcept:
+			from(nullptr),
+			count(1) {
+		}
+		Data(AutoPtr& r) noexcept: from(&r) {
+			addCount(r);
+			count = (r._idata->count);
+		}
+		AutoPtr* from;
+		size_t   count;
+	}*_idata;
+	T* _data;
+  public:
+	#if _CPP_VERSION_ >= 14
+		constexpr
+	#endif
+	AutoPtr() noexcept:
+		_idata(new Data),
+		_data(nullptr) {
+	}
+	#if _CPP_VERSION_ >= 14
+		constexpr
+	#endif
+	AutoPtr(T *d) noexcept:
+		_idata(new Data),
+		_data(d) {
+	}
+	#if _CPP_VERSION_ >= 14
+		constexpr
+	#endif
+	AutoPtr(AutoPtr& r) noexcept:
+		_idata(new Data(r)),
+		_data(r._data) {
+	}
+	#if _CPP_VERSION_ >= 14
+		constexpr
+	#endif
+	AutoPtr(AutoPtr&& r) noexcept:
+		_idata(new Data(r)),
+		_data(r._data) {
+		r._data = nullptr;
+		r._idata->count == 0;
+	}
+	constexpr size_t getCount() const noexcept {
+		return _idata->count;
+	}
+	constexpr T*const getData() const noexcept {
+		return _data;
+	}
+	template <typename U>
+	constexpr bool operator==(const AutoPtr<U>& r) const noexcept {
+		return (void*)_data == (void*)r._data;
+	}
+	constexpr bool operator==(void* e) const noexcept {
+		return (void*)_data == e;
+	}
+	constexpr typename std::remove_extent<T>::type& operator[](size_t in) const noexcept {
+		return _data[in];
+	}
+	AutoPtr& operator=(T* d) noexcept {
+		if (d != _data and _idata->count != 0) {
+			remCount(*this);
+			if (_idata->count == 1)
+				Delete<>()(_data);
+			_data = d;
+		}
+		return *this;
+	}
+	T* release() noexcept {
+		if (_idata->count != 0) {
+			T* t = _data;
+			_data = nullptr;
+			remCount(*this);
+			_idata->count = 0;
+			return t;
+		}
+		return nullptr;
+	}
+	~AutoPtr() {
+		if (_idata->count == 1) {
+			Delete<>()(_data);
+		} else if (_idata->count != 0) {
+			remCount(*this);
+		}
+	}
+};
+
+template <>
+class AutoPtr<void> {
+};
+template <typename T>
+class AutoPtr<T[]> {
+};
+
+#if _CPP_VERSION_ >= 17
+
+template <typename T>
+AutoPtr(T*) -> AutoPtr<T>;
+
+template <typename T>
+AutoPtr(AutoPtr<T>) -> AutoPtr<T>;
+
+#endif
+
+#ifdef STD_NAMESPACE
+}
+#endif
+
+#endif

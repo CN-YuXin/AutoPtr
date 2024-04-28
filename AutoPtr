@@ -156,8 +156,6 @@ class AutoPtr {
 			if (*r._count != nullptr)
 				++**r._count;
 		}
-		r._data  = nullptr;
-		r._count = nullptr;
 		return *this;
 	}
 	T* release() noexcept {

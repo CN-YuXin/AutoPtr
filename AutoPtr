@@ -57,7 +57,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		if (*r._count != nullptr)
+		if (_data != nullptr)
 			++**r._count;
 	}
 	#if _CPP_VERSION_ >= 14
@@ -66,7 +66,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr&& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		if (*r._count != nullptr)
+		if (_data != nullptr)
 			++**r._count;
 		r._data  = nullptr;
 		r._count = nullptr;
@@ -126,11 +126,11 @@ class AutoPtr {
 			} else if (*_count != nullptr and **_count == 1) {
 				delete *_count;
 				delete _count;
-				*_count = nullptr; 
+				*_count = nullptr;
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*r._count != nullptr)
+			if (_data != nullptr)
 				++**r._count;
 		}
 		return *this;
@@ -142,7 +142,7 @@ class AutoPtr {
 					deleteClass()(_data);
 					delete *_count;
 					delete _count;
-					*_count = nullptr; 
+					*_count = nullptr;
 				} else {
 					--**_count;
 				}
@@ -153,7 +153,7 @@ class AutoPtr {
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*r._count != nullptr)
+			if (_data != nullptr)
 				++**r._count;
 		}
 		return *this;
@@ -181,7 +181,7 @@ class AutoPtr {
 				deleteClass()(_data);
 				delete *_count;
 				delete _count;
-				*_count = nullptr; 
+				*_count = nullptr;
 			} else {
 				--**_count;
 			}

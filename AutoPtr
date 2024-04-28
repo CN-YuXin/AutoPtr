@@ -105,12 +105,11 @@ class AutoPtr {
 			if (_data != nullptr and _count != nullptr) {
 				if (*_count == 1) {
 					deleteClass()(_data);
-					if (_count != nullptr)
-						delete _count;
 				} else {
 					--*_count;
 				}
-			} else if (_count != nullptr) {
+			}
+			if(_count != nullptr) {
 				delete _count; 
 			}
 			_data = d;
@@ -120,15 +119,14 @@ class AutoPtr {
 	}
 	AutoPtr& operator=(AutoPtr& r) noexcept {
 		if (r._data != _data) {
-			if (_data != nullptr) {
+			if (_data != nullptr and _count != nullptr) {
 				if (*_count == 1) {
 					deleteClass()(_data);
-					if (_count != nullptr)
-						delete _count;
 				} else {
 					--*_count;
 				}
-			} else if (_count != nullptr) {
+			}
+			if (_count != nullptr) {
 				delete _count; 
 			}
 			_data = r._data;
@@ -139,15 +137,14 @@ class AutoPtr {
 	}
 	AutoPtr& operator=(AutoPtr&& r) noexcept {
 		if (r._data != _data) {
-			if (_data != nullptr) {
+			if (_data != nullptr and _count != nullptr) {
 				if (*_count == 1) {
 					deleteClass()(_data);
-					if (_count != nullptr)
-						delete _count;
 				} else {
 					--*_count;
 				}
-			} else if (_count != nullptr) {
+			}
+			if (_count != nullptr) {
 				delete _count; 
 			}
 			_data = r._data;
@@ -159,7 +156,7 @@ class AutoPtr {
 		return *this;
 	}
 	T* release() noexcept {
-		if (_data != nullptr) {
+		if (_data != nullptr and _count != nullptr) {
 			T* p = _data;
 			_data = nullptr;
 			delete _count;
@@ -175,12 +172,11 @@ class AutoPtr {
 		if (_data != nullptr and _count != nullptr) {
 			if (*_count == 1) {
 				deleteClass()(_data);
-				if (_count != nullptr)
-					delete _count;
 			} else {
 				--*_count;
 			}
-		} else if (_count != nullptr) {
+		}
+		if (_count != nullptr) {
 			delete _count; 
 		}
 	}

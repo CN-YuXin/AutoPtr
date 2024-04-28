@@ -41,7 +41,7 @@ class AutoPtr {
 	constexpr
 	#endif
 	AutoPtr() noexcept:
-		_count(nullptr),
+		_count(new sizeType*(nullptr)),
 		_data(nullptr) {
 	}
 	#if _CPP_VERSION_ >= 14
@@ -71,7 +71,7 @@ class AutoPtr {
 		r._data  = nullptr;
 		r._count = nullptr;
 	}
-	sizeType& getCount() const noexcept {
+	constexpr sizeType getCount() const noexcept {
 		return **_count;
 	}
 	constexpr T* getData() const noexcept {
@@ -92,6 +92,7 @@ class AutoPtr {
 	}
 	AutoPtr& operator=(T* d) noexcept {
 		if (d != _data) {
+			
 			if (_data != nullptr and *_count != nullptr) {
 				if (**_count == 1) {
 					deleteClass()(_data);

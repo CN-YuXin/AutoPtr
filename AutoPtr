@@ -84,7 +84,7 @@ class AutoPtr {
 	constexpr size_t getCount() const noexcept {
 		return *_count;
 	}
-	constexpr T*const getData() const noexcept {
+	constexpr T* getData() const noexcept {
 		return _data;
 	}
 	template <typename U>
@@ -95,7 +95,7 @@ class AutoPtr {
 		return (void*)_data == e;
 	}
 	constexpr elementType& operator[](size_t in) const noexcept {
-		return _data[in];
+		return ((elementType*)_data)[in];
 	}
 	constexpr elementType& operator*() const noexcept {
 		return *_data;

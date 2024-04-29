@@ -5,29 +5,7 @@
 
 #include <type_traits>
 #include <stddef.h>
-namespace S {
-	struct t {
-		size_t v;
-		t() {
-			std::cout << __PRETTY_FUNCTION__ << '\t' << '[' << this << ']' << std::endl;
-		}
-		t(size_t v): v(v) {
-			std::cout << __PRETTY_FUNCTION__ << '\t' << '[' << this << ']' << std::endl;
-		}
-		t(const t&) {
-			std::cout << __PRETTY_FUNCTION__ << '\t' << '[' << this << ']' << std::endl;
-		}
-		t(t&&) {
-			std::cout << __PRETTY_FUNCTION__ << '\t' << '[' << this << ']' << std::endl;
-		}
-		~t() {
-			std::cout << __PRETTY_FUNCTION__ << '\t' << '[' << this << ']' << std::endl;
-		}
-		operator size_t&() {
-			return v;
-		}
-	};
-}
+
 #ifdef STD_NAMESPACE
 namespace STD_NAMESPACE {
 #endif
@@ -58,7 +36,7 @@ class AutoPtr {
 	#endif
 	using pointToType = T;
 	using elementType = typename std::remove_extent<T>::type;
-	using sizeType    = S::t;
+	using sizeType    = size_t;
 	#if _CPP_VERSION_ >= 14
 	constexpr
 	#endif

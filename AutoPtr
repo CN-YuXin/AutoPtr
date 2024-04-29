@@ -36,7 +36,7 @@ class AutoPtr {
 	#endif
 	using pointToType = T;
 	using elementType = typename std::remove_extent<T>::type;
-	using sizeType    = size_t;
+	using sizeType    = S::t;
 	#if _CPP_VERSION_ >= 14
 	constexpr
 	#endif
@@ -50,7 +50,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		if (*_count != nullptr)
+		if (*_count != nullptr and _data != nullptr)
 			++**r._count;
 	}
 	#if _CPP_VERSION_ >= 14
@@ -59,13 +59,13 @@ class AutoPtr {
 	AutoPtr(AutoPtr&& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		if (*_count != nullptr)
+		if (*_count != nullptr and _data != nullptr)
 			++**r._count;
 		r._data  = nullptr;
 		*r._count = nullptr;
 	}
 	constexpr sizeType getCount() const noexcept {
-		return *_count == nullptr ? 0 : **_count;
+		return **_count;
 	}
 	constexpr T* getData() const noexcept {
 		return _data;
@@ -126,7 +126,7 @@ class AutoPtr {
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*_count != nullptr)
+			if (*_count != nullptr and _data != nullptr)
 				++**r._count;
 		}
 		return *this;
@@ -151,7 +151,7 @@ class AutoPtr {
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*_count != nullptr)
+			if (*_count != nullptr and _data != nullptr)
 				++**r._count;
 		}
 		return *this;

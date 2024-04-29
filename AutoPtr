@@ -41,7 +41,7 @@ class AutoPtr {
 	constexpr
 	#endif
 	AutoPtr(T* d = nullptr) noexcept:
-		_count(d == nullptr ? (new sizeType*(nullptr)) : (new sizeType*(new sizeType(1)))),
+		_count(new sizeType*(new sizeType(1))),
 		_data(d) {
 	}
 	#if _CPP_VERSION_ >= 14

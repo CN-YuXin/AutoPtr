@@ -86,7 +86,6 @@ class AutoPtr {
 			if (_data == nullptr) {
 				if (**_count == 1) {
 					delete *_count;
-					*_count = nullptr;
 					delete _count;
 				} else {
 					--**_count;
@@ -95,7 +94,6 @@ class AutoPtr {
 				if (**_count == 1) {
 					deleteClass()(_data);
 					delete *_count;
-					*_count = nullptr;
 					delete _count;
 				} else {
 					--**_count;
@@ -111,7 +109,6 @@ class AutoPtr {
 			if (_data == nullptr) {
 				if (**_count == 1) {
 					delete *_count;
-					*_count = nullptr;
 					delete _count;
 				} else {
 					--**_count;
@@ -120,7 +117,6 @@ class AutoPtr {
 				if (**_count == 1) {
 					deleteClass()(_data);
 					delete *_count;
-					*_count = nullptr;
 					delete _count;
 				} else {
 					--**_count;
@@ -128,8 +124,7 @@ class AutoPtr {
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*_count != nullptr)
-				++**r._count;
+			++**r._count;
 		}
 		return *this;
 	}

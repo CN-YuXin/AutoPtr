@@ -70,7 +70,7 @@ class AutoPtr {
 		_data(r._data) {
 		++**r._count;
 	}
-	constexpr sizeType& getCount() const noexcept {
+	constexpr sizeType getCount() const noexcept {
 		return **_count;
 	}
 	constexpr T* getData() const noexcept {
@@ -114,6 +114,18 @@ class AutoPtr {
 			++**r._count;
 		}
 		return *this;
+	}
+	T* release() noexcept {
+		T* _d = _data;
+		if (**_count == 1) {
+			delete *_count;
+			delete _count;
+		} else {
+			--**_count;
+		}
+		_data = nullptr;
+		_count = new sizeType*(new sizeType(1));
+		return _d;
 	}
 	~AutoPtr() {
 		td();

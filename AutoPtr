@@ -36,7 +36,7 @@ class AutoPtr {
 	#endif
 	using pointToType = T;
 	using elementType = typename std::remove_extent<T>::type;
-	using sizeType    = S::t;
+	using sizeType    = size_t;
 	#if _CPP_VERSION_ >= 14
 	constexpr
 	#endif
@@ -50,8 +50,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		if (*_count != nullptr and _data != nullptr)
-			++**r._count;
+		++**r._count;
 	}
 	#if _CPP_VERSION_ >= 14
 	constexpr
@@ -59,8 +58,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr&& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		if (*_count != nullptr and _data != nullptr)
-			++**r._count;
+		++**r._count;
 		r._data  = nullptr;
 		*r._count = nullptr;
 	}
@@ -85,18 +83,20 @@ class AutoPtr {
 	}
 	AutoPtr& operator=(T* d) noexcept {
 		if (d != _data) {
-			if (_data == nullptr and *_count != nullptr) {
+			if (_data == nullptr) {
 				if (**_count == 1) {
 					delete *_count;
-					delete _count;
 					*_count = nullptr;
+					delete _count;
+				} else {
+					--**_count;
 				}
-			} else if (*_count != nullptr) {
+			} else {
 				if (**_count == 1) {
 					deleteClass()(_data);
 					delete *_count;
-					delete _count;
 					*_count = nullptr;
+					delete _count;
 				} else {
 					--**_count;
 				}
@@ -108,67 +108,68 @@ class AutoPtr {
 	}
 	AutoPtr& operator=(AutoPtr& r) noexcept {
 		if (r._data != _data) {
-			if (_data == nullptr and *_count != nullptr) {
+			if (_data == nullptr) {
 				if (**_count == 1) {
 					delete *_count;
-					delete _count;
 					*_count = nullptr;
+					delete _count;
+				} else {
+					--**_count;
 				}
-			} else if (*_count != nullptr) {
+			} else {
 				if (**_count == 1) {
 					deleteClass()(_data);
 					delete *_count;
-					delete _count;
 					*_count = nullptr;
+					delete _count;
 				} else {
 					--**_count;
 				}
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*_count != nullptr and _data != nullptr)
+			if (*_count != nullptr)
 				++**r._count;
 		}
 		return *this;
 	}
 	AutoPtr& operator=(AutoPtr&& r) noexcept {
 		if (r._data != _data) {
-			if (_data == nullptr and *_count != nullptr) {
+			if (_data == nullptr) {
 				if (**_count == 1) {
 					delete *_count;
 					delete _count;
-					*_count = nullptr;
+				} else {
+					--**_count;
 				}
-			} else if (*_count != nullptr) {
+			} else {
 				if (**_count == 1) {
 					deleteClass()(_data);
 					delete *_count;
 					delete _count;
-					*_count = nullptr;
 				} else {
 					--**_count;
 				}
 			}
 			_data  = r._data;
 			_count = r._count;
-			if (*_count != nullptr and _data != nullptr)
-				++**r._count;
+			++**r._count;
 		}
 		return *this;
 	}
 	~AutoPtr() {
-		if (_data == nullptr and *_count != nullptr) {
+		if (_data == nullptr) {
 			if (**_count == 1) {
 				delete *_count;
 				delete _count;
-				*_count = nullptr;
+			} else {
+				--**_count;
 			}
-		} else if (*_count != nullptr) {
+		} else {
 			if (**_count == 1) {
 				deleteClass()(_data);
 				delete *_count;
 				delete _count;
-				*_count = nullptr;
 			} else {
 				--**_count;
 			}

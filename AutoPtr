@@ -69,8 +69,6 @@ class AutoPtr {
 		_count(r._count),
 		_data(r._data) {
 		++**r._count;
-		r._data  = nullptr;
-		*r._count = nullptr;
 	}
 	constexpr sizeType& getCount() const noexcept {
 		return **_count;

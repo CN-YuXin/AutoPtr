@@ -25,6 +25,7 @@ Delete类模板是默认的Delete方式，T是管理的类型，使用delete关�
 1. `AutoPtr(T\* d = nullptr)` noexcept 初始化指向为d，引用计数为1，**C++14起constexpr**
 2. `AutoPtr(AutoPtr& r)` noexcept 指向和引用计数指针初始化为r的，并++引用计数，**C++14起constexpr**
 3. `AutoPtr(AutoPtr&& r)` noexcept 移动构造，虽说是移动构造不过和第二个构造的作用一模一样
+
 成员函数:
 1. `constexpr sizeType getCount() const noexcept` 返回引用计数
 2. `constexpr T* getData() const noexcept` 返回管理的数据的裸指针

@@ -1,19 +1,19 @@
 ## AutoPtr(YuXin)
 
-此类的构造较为简单**是个类模板**，是跨CPP版本的**最低支持C++11**，类似于`std::shared_ptr`，提交pr可在github或2416145262这个QQ提交
+- 此类的构造较为简单**是个类模板**，是跨CPP版本的**最低支持C++11**，类似于`std::shared_ptr`，提交pr可在github或2416145262这个QQ提交
 
-如果定义**STD_NAMESPACE**宏那么整个类都会在名字为这个宏的值的命名空间里
+- 如果定义**STD_NAMESPACE**宏那么整个类都会在名字为这个宏的值的命名空间里
 
-模板定义(C++17前):
+- 模板定义(C++17前):
 
-`template <typename T, typename D = Delete<T>>`
-对于C++17后的模板定义是
+    `template <typename T, typename D = Delete<T>>`
+    对于C++17后的模板定义是
 
-`template <typename T, template <typename> typename D = Delete>`
+    `template <typename T, template <typename> typename D = Delete>`
 
-Delete类模板是默认的Delete方式，T是管理的类型，使用delete关键字进行delete，**它拥有数组的特化，所以不必担心数组是否正确释放的问题**
+- Delete类模板是默认的Delete方式，T是管理的类型，使用delete关键字进行delete，**它拥有数组的特化，所以不必担心数组是否正确释放的问题**
 
-若要自定义delete类那么它**必须拥有一个任意返回类型的operator()**，参数是要delete的类型的指针，**且这个类型必须要有可用的默认构造且不抛出异常**
+- 若要自定义delete类那么它**必须拥有一个任意返回类型的operator()**，参数是要delete的类型的指针，**且这个类型必须要有可用的默认构造且不抛出异常**
 
 类型别名:
 1. deleteClass delete的类类型，C++17前是D，C++17后是D\<T\>

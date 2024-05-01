@@ -16,7 +16,7 @@ Delete类模板是默认的Delete方式，T是管理的类型，使用delete关�
 若要自定义delete类那么它**必须拥有一个任意返回类型的operator()**，参数是要delete的类型的指针，且这个类型必须要有可用的默认构造且不抛出异常
 
 类型别名:
-1. deleteClass delete的类类型，C++17前是D，C++17后是D<T>
+1. deleteClass delete的类类型，C++17前是D，C++17后是D\<T\>
 2. pointToType 指向的类型，即T
 3. elementType 元素类型，即`remove_extent<T>::type`
 4. sizeType    size_t

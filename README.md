@@ -1,5 +1,5 @@
 ## AutoPtr(YuXin)
-## 测试文本
+## Test
 
 此类的构造较为简单**是个类模板**，是跨CPP版本的**最低支持C++11**，类似于`std::shared_ptr`，提交pr可在github或2416145262这个QQ提交
 

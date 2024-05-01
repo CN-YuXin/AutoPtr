@@ -20,6 +20,7 @@ Delete类模板是默认的Delete方式，T是管理的类型，使用delete关�
 2. pointToType 指向的类型，即T
 3. elementType 元素类型，即`remove_extent<T>::type`
 4. sizeType    size_t
+
 构造:
 1. AutoPtr(T\* d = nullptr) noexcept 初始化指向为d，引用计数为1，**C++14起constexpr**
 2. AutoPtr(AutoPtr& r) noexcept 指向和引用计数指针初始化为r的，并++引用计数，**C++14起constexpr**

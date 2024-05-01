@@ -1,4 +1,5 @@
 ## AutoPtr(YuXin)
+## 测试文本
 
 此类的构造较为简单**是个类模板**，是跨CPP版本的**最低支持C++11**，类似于`std::shared_ptr`，提交pr可在github或2416145262这个QQ提交
 
@@ -26,16 +27,16 @@ Delete类模板是默认的Delete方式，T是管理的类型，使用delete关�
 2. AutoPtr(AutoPtr& r) noexcept 指向和引用计数指针初始化为r的，并++引用计数，**C++14起constexpr**
 3. AutoPtr(AutoPtr&& r) noexcept 移动构造，虽说是移动构造不过和第二个构造的作用一模一样
 成员函数:
-1. constexpr sizeType getCount() const noexcept 返回引用计数
-2. constexpr T\* getData() const noexcept 返回管理的数据的裸指针
-3. template <typename U> constexpr bool operator==(const AutoPtr\<U\>& r) const noexcept 判断指向是否与r相同
-4. constexpr bool operator==(void\* e) const noexcept 判断指向是否与e相同
-5. elementType& constexpr operator\*() const noexcept 返回\*getData()
-6. elementType& constexpr operator\[\](sizeType in) const noexcept 返回第in个索引的元素的引用
-7. AutoPtr& operator=(T\* d) noexcept 如果d与当前指向相同则什么也不做否则将指向改变为d并重新申请引用计数的内存，若在此时引用计数为1就先释放引用计数的内存如果getData()不为空指针那么把管理的数据也一齐释放了，返回*this
-8. AutoPtr& operator=(AutoPtr& r) noexcept 指向和引用计数改变为r的指向和引用计数，其它的同7
-9. AutoPtr& operator=(AutoPtr&& r) noexcept 同8
-10. T\* release() noexcept **将指向的数据的指针设置为空指针**并重新申请引用内存，若此时引用计数为1那么就先释放引用计数的内存如果不为1就--引用计数，返回制空前的指向的裸指针
+1. `constexpr sizeType getCount() const noexcept` 返回引用计数
+2. `constexpr T* getData() const noexcept` 返回管理的数据的裸指针
+3. `template <typename U> constexpr bool operator==(const AutoPtr<U>& r) const noexcept` 判断指向是否与r相同
+4. `constexpr bool operator==(void* e) const noexcept` 判断指向是否与e相同
+5. `elementType& constexpr operator*() const noexcept` 返回\*getData()
+6. `elementType& constexpr operator[](sizeType in) const noexcept` 返回第in个索引的元素的引用
+7. `AutoPtr& operator=(T* d) noexcept` 如果d与当前指向相同则什么也不做否则将指向改变为d并重新申请引用计数的内存，若在此时引用计数为1就先释放引用计数的内存如果getData()不为空指针那么把管理的数据也一齐释放了，返回*this
+8. `AutoPtr& operator=(AutoPtr& r) noexcept` 指向和引用计数改变为r的指向和引用计数，其它的同7
+9. `AutoPtr& operator=(AutoPtr&& r) noexcept` 同8
+10. `T* release() noexcept` **将指向的数据的指针设置为空指针**并重新申请引用内存，若此时引用计数为1那么就先释放引用计数的内存如果不为1就--引用计数，返回制空前的指向的裸指针
 
 析构就是判断引用计数是否为1如果是那么就释放引用计数，如果指向不为空那么就释放它
 

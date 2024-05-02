@@ -60,7 +60,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		++**r._count;
+		++**_count;
 	}
 	#if _CPP_VERSION_ >= 14
 	constexpr
@@ -68,7 +68,7 @@ class AutoPtr {
 	AutoPtr(AutoPtr&& r) noexcept:
 		_count(r._count),
 		_data(r._data) {
-		++**r._count;
+		++**_count;
 	}
 	constexpr sizeType getCount() const noexcept {
 		return **_count;
@@ -88,6 +88,13 @@ class AutoPtr {
 	}
 	constexpr elementType& operator*() const noexcept {
 		return *_data;
+	}
+	constexpr T* operator->() const noexcept {
+		return _data;
+	}
+	template <typename U>
+	constexpr U operator->*(U T::* m) const noexcept {
+		return _data->*m;
 	}
 	AutoPtr& operator=(T* d) noexcept {
 		if (d != _data) {

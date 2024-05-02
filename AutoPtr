@@ -92,8 +92,8 @@ class AutoPtr {
 	constexpr T* operator->() const noexcept {
 		return _data;
 	}
-	template <typename U>
-	constexpr U operator->*(U T::* m) const noexcept {
+	template <typename U, typename V>
+	constexpr U operator->*(U V::* m) const noexcept {
 		return _data->*m;
 	}
 	AutoPtr& operator=(T* d) noexcept {

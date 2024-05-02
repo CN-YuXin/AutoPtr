@@ -37,6 +37,8 @@
 8. `AutoPtr& operator=(AutoPtr& r) noexcept` 指向和引用计数改变为r的指向和引用计数，其它的同7
 9. `AutoPtr& operator=(AutoPtr&& r) noexcept` 同8
 10. `T* release() noexcept` **将指向的数据的指针设置为空指针**并重新申请引用内存，若此时引用计数为1那么就先释放引用计数的内存如果不为1就--引用计数，返回制空前的指向的裸指针
+11. `constexpr T* operator->() const noexcept` 就是返回getData()
+12. `template <typename U> constexpr U operator->*(U T::* m) const noexcept` 就是返回getData()->*m
 
 析构就是判断引用计数是否为1如果是那么就释放引用计数，如果指向不为空那么就释放它
 

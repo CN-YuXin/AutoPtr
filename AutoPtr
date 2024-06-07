@@ -6,8 +6,8 @@
 #include <type_traits>
 #include <stddef.h>
 
-#ifdef STD_NAMESPACE
-namespace STD_NAMESPACE {
+#ifdef USER_NAMESPACE
+namespace USER_NAMESPACE {
 #endif
 
 template <typename U>
@@ -168,7 +168,7 @@ AutoPtr(AutoPtr<T,U>) -> AutoPtr<T,U>;
 
 #endif
 
-#ifdef STD_NAMESPACE
+#ifdef USER_NAMESPACE
 }
 #endif
 
